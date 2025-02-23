@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { RepoStats } from "@/lib/analyze-repo"
 import { FileCode2, Files, Layout, Network } from "lucide-react"
+import { NumberTicker } from "./number-ticker"
 import { ShareButton } from "./share-button"
 
 interface StatsDisplayProps {
@@ -35,7 +36,7 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
     <Card>
       <div className="flex items-start justify-between">
         <CardHeader>
-          <CardTitle>{stats.repo}</CardTitle>
+          <CardTitle className="font-bold text-3xl/6">{stats.repo}</CardTitle>
           <CardDescription>{stats.owner}</CardDescription>
         </CardHeader>
         <div className="p-6">
@@ -44,13 +45,13 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
       </div>
       <CardContent className="grid gap-4 md:grid-cols-2">
         {items.map((item) => (
-          <Card key={item.title}>
+          <Card key={item.title} className="shadow-small">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="font-medium text-sm">{item.title}</CardTitle>
               <item.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="font-bold text-2xl">{item.value}</div>
+              <NumberTicker key={stats.repo} className="font-extrabold font-mono text-3xl" value={item.value} />
             </CardContent>
           </Card>
         ))}

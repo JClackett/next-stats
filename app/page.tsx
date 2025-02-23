@@ -42,7 +42,7 @@ export async function generateMetadata({
 
 export default function Page({ searchParams }: { searchParams: Promise<{ repo?: string }> }) {
   return (
-    <div className="flex min-h-screen flex-col bg-muted/40">
+    <div className="flex min-h-screen flex-col">
       <main className="container mx-auto max-w-3xl flex-12 space-y-6 px-4 py-24">
         <Card>
           <CardHeader>
@@ -73,7 +73,16 @@ export default function Page({ searchParams }: { searchParams: Promise<{ repo?: 
           </CardContent>
         </Card>
 
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          key={new Date().toISOString()}
+          fallback={
+            <Card>
+              <CardContent className="pt-6">
+                <p>Generating stats...</p>
+              </CardContent>
+            </Card>
+          }
+        >
           <RepoStats searchParams={searchParams} />
         </Suspense>
       </main>
@@ -87,7 +96,7 @@ async function RepoStats({ searchParams }: { searchParams: Promise<{ repo?: stri
   const result = await analyzeRepo(repoUrl)
 
   if (result.error) {
-    return <div className="rounded-lg bg-destructive/15 px-6 py-4 text-destructive text-sm">{result.error}</div>
+    return <div className="rounded-lg bg-destructive px-6 py-4 text-sm text-white shadow-main">{result.error}</div>
   }
 
   if (!result.data) return null

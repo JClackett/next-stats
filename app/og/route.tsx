@@ -23,6 +23,7 @@ export async function GET(request: Request) {
     return new ImageResponse(
       <div
         style={{
+          position: "relative",
           height: "100%",
           width: "100%",
           display: "flex",
@@ -30,35 +31,38 @@ export async function GET(request: Request) {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#09090b",
-          padding: "48px 24px",
+          padding: "28px 14px",
         }}
       >
         <div
           style={{
+            left: 42,
+            top: 42,
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <span style={{ marginLeft: 8, fontSize: 30, color: "white" }}>Next Stats</span>
+        </div>
+        <div
+          style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center",
             gap: "24px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              fontSize: 40,
-              fontWeight: 600,
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            {owner}/{repo}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0px" }}>
+            <div style={{ display: "flex", lineHeight: 1, fontSize: 60, fontWeight: 700, color: "white", textAlign: "left" }}>
+              {repo}
+            </div>
+            <div style={{ display: "flex", fontSize: 40, fontWeight: 600, color: "white", opacity: 0.6, textAlign: "left" }}>
+              {owner}
+            </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "24px",
-            }}
-          >
+          <div style={{ display: "flex", gap: "24px" }}>
             {[
               { label: "Pages", value: pages },
               { label: "Components", value: components },
@@ -75,10 +79,11 @@ export async function GET(request: Request) {
                   backgroundColor: "#27272a",
                   padding: "16px 24px",
                   borderRadius: "8px",
+                  width: "200px",
                 }}
               >
-                <div style={{ display: "flex", color: "#a1a1aa", fontSize: 16 }}>{stat.label}</div>
-                <div style={{ display: "flex", color: "white", fontSize: 32, fontWeight: 600 }}>{stat.value}</div>
+                <div style={{ display: "flex", color: "#a1a1aa", fontSize: 20 }}>{stat.label}</div>
+                <div style={{ display: "flex", color: "white", fontSize: 60, fontWeight: 600 }}>{stat.value}</div>
               </div>
             ))}
           </div>
