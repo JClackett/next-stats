@@ -33,9 +33,8 @@ function SubmitButton() {
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending}>
-      {pending && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
-      Analyze
+    <Button type="submit" disabled={pending} className="w-[100px]">
+      {pending ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin" /> : "Analyze"}
     </Button>
   )
 }

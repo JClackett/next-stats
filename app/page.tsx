@@ -43,7 +43,7 @@ export async function generateMetadata({
 export default function Page({ searchParams }: { searchParams: Promise<{ repo?: string }> }) {
   return (
     <div className="flex min-h-screen flex-col bg-muted/40">
-      <main className="container mx-auto max-w-3xl flex-12 px-4 py-24">
+      <main className="container mx-auto max-w-3xl flex-12 space-y-6 px-4 py-24">
         <Card>
           <CardHeader>
             <CardTitle>Analyze Next.js Repository</CardTitle>
@@ -70,12 +70,12 @@ export default function Page({ searchParams }: { searchParams: Promise<{ repo?: 
             >
               <RepoForm />
             </Suspense>
-
-            <Suspense fallback={<div>Loading...</div>}>
-              <RepoStats searchParams={searchParams} />
-            </Suspense>
           </CardContent>
         </Card>
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <RepoStats searchParams={searchParams} />
+        </Suspense>
       </main>
     </div>
   )
@@ -87,7 +87,7 @@ async function RepoStats({ searchParams }: { searchParams: Promise<{ repo?: stri
   const result = await analyzeRepo(repoUrl)
 
   if (result.error) {
-    return <div className="rounded-lg bg-destructive/15 px-4 py-2 text-destructive text-sm">{result.error}</div>
+    return <div className="rounded-lg bg-destructive/15 px-6 py-4 text-destructive text-sm">{result.error}</div>
   }
 
   if (!result.data) return null

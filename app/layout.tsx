@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 import { Geist, Geist_Mono } from "next/font/google"
 
 const sansFont = Geist({ variable: "--font-sans", subsets: ["latin"] })
@@ -17,6 +18,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
       <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
