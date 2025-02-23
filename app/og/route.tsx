@@ -1,5 +1,5 @@
-import { ImageResponse } from "next/og"
 import { analyzeRepo } from "@/lib/analyze-repo"
+import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
 
@@ -77,8 +77,8 @@ export async function GET(request: Request) {
                   borderRadius: "8px",
                 }}
               >
-                <div style={{ color: "#a1a1aa", fontSize: 16 }}>{stat.label}</div>
-                <div style={{ color: "white", fontSize: 32, fontWeight: 600 }}>{stat.value}</div>
+                <div style={{ display: "flex", color: "#a1a1aa", fontSize: 16 }}>{stat.label}</div>
+                <div style={{ display: "flex", color: "white", fontSize: 32, fontWeight: 600 }}>{stat.value}</div>
               </div>
             ))}
           </div>
@@ -94,4 +94,3 @@ export async function GET(request: Request) {
     return new Response("Failed to generate image", { status: 500 })
   }
 }
-
