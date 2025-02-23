@@ -11,8 +11,9 @@ export async function GET(request: Request) {
     if (!repoUrl) {
       return new Response("Missing repo parameter", { status: 400 })
     }
+    const decodedRepoUrl = decodeURIComponent(repoUrl)
 
-    const result = await analyzeRepo(repoUrl)
+    const result = await analyzeRepo(decodedRepoUrl)
 
     if (result.error || !result.data) {
       throw new Error(result.error || "Failed to analyze repository")
