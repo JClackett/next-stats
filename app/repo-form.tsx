@@ -31,10 +31,10 @@ export function RepoForm() {
         type="url"
         autoComplete="organization"
         autoCorrect="off"
-        placeholder="https://github.com/username/repo"
+        placeholder="https://github.com/username/repo or path to next root"
         defaultValue={decoded || ""}
         required
-        pattern="https://github\.com/[\w-]+/[\w\.-]+"
+        // pattern="https://github\.com/[\w-]+/[\w\.-]+"
         className="flex-1"
       />
       <SubmitButton />

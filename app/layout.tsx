@@ -11,7 +11,7 @@ import { RepoForm } from "./repo-form"
 const sansFont = Geist({ variable: "--font-sans", subsets: ["latin"] })
 const monoFont = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] })
 
-export const runtime = "edge"
+// export const runtime = "edge"
 
 export const metadata: Metadata = {
   title: "Rate My Next",

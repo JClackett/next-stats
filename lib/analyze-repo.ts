@@ -21,10 +21,10 @@ export const analyzeRepo = cache(
   unstable_cache(
     async (url: string): Promise<{ error?: string; data?: RepoStats }> => {
       try {
-        // Extract owner and repo from GitHub URL
-        const match = url.match(/github\.com\/([^/]+)\/([^/]+)/)
+        // Extract owner, repo and optional path from GitHub URL
+        const match = url.match(/github\.com\/([^/]+)\/([^/]+)(?:\/tree\/[^/]+)?(?:\/(.+))?/)
         if (!match) return { error: "Invalid GitHub URL" }
-        const [, owner, repo] = match
+        const [, owner, repo, subPath] = match
 
         // Get repository contents recursively
         const repoInfo = await octokit.rest.repos.get({ owner, repo })
@@ -37,19 +37,24 @@ export const analyzeRepo = cache(
 
         const files = response.data.tree
 
-        const nextConfigs = files.filter(
-          (file) =>
-            file.path?.endsWith("next.config.js") ||
-            file.path?.endsWith("next.config.ts") ||
-            file.path?.endsWith("next.config.mjs") ||
-            file.path?.endsWith("next.config.mts"),
-        )
+        // If subPath provided, only look for next.config in that directory
+        const nextConfigs = files.filter((file) => {
+          const isNextConfig =
+            file.path?.endsWith("/next.config.js") ||
+            file.path?.endsWith("/next.config.ts") ||
+            file.path?.endsWith("/next.config.mjs") ||
+            file.path?.endsWith("/next.config.mts")
+
+          if (!isNextConfig) return false
+          if (!subPath) return true
+          return file.path?.startsWith(subPath)
+        })
 
         if (nextConfigs.length === 0) {
           return { error: "Not a Next.js repository" }
         }
         if (nextConfigs.length > 1) {
-          return { error: "Multiple next.config.ts files found" }
+          return { error: "Multiple next.config.ts files found, paste the path to the root of a Next.js app" }
         }
 
         const nextConfig = nextConfigs[0]
