@@ -12,7 +12,6 @@ export function RepoForm() {
   const router = useRouter()
   return (
     <form
-      key={intialRepo}
       className="flex gap-2"
       onSubmit={(e) => {
         e.preventDefault()
@@ -22,6 +21,7 @@ export function RepoForm() {
       }}
     >
       <Input
+        key={intialRepo}
         name="repo"
         type="url"
         autoComplete="organization"
