@@ -20,8 +20,6 @@ export const analyzeRepo = cache(async (url: string): Promise<{ error?: string; 
       return { error: "Invalid GitHub URL" }
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-
     const [, owner, repo] = match
 
     // Initialize Octokit without auth for public repos
