@@ -60,14 +60,14 @@ export async function GET(request: Request) {
           </div>
 
           {/* Tags */}
-          <div tw="flex gap-2 pl-2">
+          <div tw="flex pl-2">
             {isTurbo && <div tw="flex mr-2 bg-[#023293] text-white px-2 py-1">Turbopack</div>}
             {isTailwind && <div tw="flex mr-2 bg-[#023293] text-white px-2 py-1">Tailwind</div>}
             {isPPR && <div tw="flex mr-2 bg-[#023293] text-white px-2 py-1">PPR</div>}
           </div>
 
           {/* Grid */}
-          <div tw="flex flex-wrap gap-6 w-full justify-center">
+          <div tw="flex flex-wrap w-full justify-center">
             {/* 3px 3px 0 -1px */}
             {stats.map((stat) => (
               <div key={stat.title} tw="flex p-2 w-1/2">
