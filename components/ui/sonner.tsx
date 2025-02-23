@@ -6,7 +6,7 @@ import { Toaster as Sonner } from "sonner"
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 const toastClassNames =
-  "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-main rounded-none"
+  "group toast group-[.toaster]:!bg-card group-[.toaster]:!text-foreground group-[.toaster]:!border-border group-[.toaster]:!shadow-main !rounded-none [&_svg]:!text-muted-foreground "
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()

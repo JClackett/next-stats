@@ -40,28 +40,33 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
           <CardTitle className="font-bold text-3xl/6">{stats.repo}</CardTitle>
           <CardDescription>{stats.owner}</CardDescription>
         </CardHeader>
-        <div className="p-6">
-          <ShareButton />
+
+        <div className="flex flex-row items-center gap-2 pt-6 pr-6">
+          <span className="text-muted-foreground">Score</span>
+          <NumberTicker key={stats.repo} className="font-extrabold font-mono text-3xl" value={stats.score} />
         </div>
       </div>
 
       <CardContent className="flex flex-col gap-4">
-        <div className="flex gap-2">
-          {stats.isTurbo && (
-            <Badge variant="secondary">
-              <CheckIcon size={12} /> Turbopack
-            </Badge>
-          )}
-          {stats.isTailwind && (
-            <Badge variant="secondary">
-              <CheckIcon size={12} /> Tailwind
-            </Badge>
-          )}
-          {stats.isPPR && (
-            <Badge variant="secondary">
-              <CheckIcon size={12} /> PPR
-            </Badge>
-          )}
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            {stats.isTurbo && (
+              <Badge variant="secondary">
+                <CheckIcon size={12} /> Turbopack
+              </Badge>
+            )}
+            {stats.isTailwind && (
+              <Badge variant="secondary">
+                <CheckIcon size={12} /> Tailwind
+              </Badge>
+            )}
+            {stats.isPPR && (
+              <Badge variant="secondary">
+                <CheckIcon size={12} /> PPR
+              </Badge>
+            )}
+          </div>
+          <ShareButton />
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {items.map((item) => (

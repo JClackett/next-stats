@@ -12,6 +12,7 @@ export interface RepoStats {
   isTurbo: boolean
   isTailwind: boolean
   isPPR: boolean
+  score: number
 }
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN })
@@ -82,12 +83,11 @@ export const analyzeRepo = cache(
 
             if (file.type === "blob") {
               totalFiles++
-
-              if (file.path.match(/app\/(.+\/)?page\.(js|jsx|ts|tsx)$/)) {
+              if (file.path.match(/app\/(.+\/)?page.tsx$/)) {
                 pages++
-              } else if (file.path.match(/components\/.*\.(js|jsx|ts|tsx)$/)) {
+              } else if (file.path.match(/.*\.(tsx)$/)) {
                 components++
-              } else if (file.path.match(/app\/api\/.*route\.(js|jsx|ts|tsx)$/)) {
+              } else if (file.path.match(/.*route\.(ts|tsx)$/)) {
                 apiRoutes++
               }
             }
@@ -107,7 +107,8 @@ export const analyzeRepo = cache(
           isPPR = true
         }
 
-        return { data: { owner, repo, pages, components, apiRoutes, totalFiles, isTurbo, isTailwind, isPPR } }
+        const score = calculateScore(pages, components, apiRoutes, totalFiles, isTurbo, isTailwind, isPPR)
+        return { data: { owner, repo, pages, components, apiRoutes, totalFiles, isTurbo, isTailwind, isPPR, score } }
       } catch (error: any) {
         console.log(error)
         if (error.status === 404) {
@@ -123,6 +124,33 @@ export const analyzeRepo = cache(
     { revalidate: 60 },
   ),
 )
+
+function calculateScore(
+  pages: number,
+  components: number,
+  apiRoutes: number,
+  totalFiles: number,
+  isTurbo: boolean,
+  isTailwind: boolean,
+  isPPR: boolean,
+) {
+  let score = 0
+  if (isTurbo) {
+    score += 100
+  }
+  if (isTailwind) {
+    score += 100
+  }
+  if (isPPR) {
+    score += 100
+  }
+  score += pages * 100
+  score += components * 20
+  score += apiRoutes * 100
+  score += totalFiles
+
+  return score
+}
 
 async function getPackageJson(owner: string, repo: string, nextDirectory: string, repoInfo: any) {
   const pkgResponse = await octokit.rest.repos.getContent({

@@ -14,8 +14,8 @@ const monoFont = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] })
 export const runtime = "edge"
 
 export const metadata: Metadata = {
-  title: "Next Stats",
-  description: "Analyze Next.js repositories for pages, components, API routes, and more.",
+  title: "Rate My Next",
+  description: "Rate your Next.js repository.",
 }
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -27,9 +27,9 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
             <main className="container mx-auto max-w-3xl space-y-6 px-4 pt-16">
               <Card>
                 <CardHeader>
-                  <CardTitle>Analyze Next.js Repository</CardTitle>
+                  <CardTitle>Rate My Next</CardTitle>
                   <CardDescription className="font-mono">
-                    Enter a GitHub repository URL to analyze its Next.js stats
+                    Enter a GitHub repository URL to rate your Next.js repository
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">

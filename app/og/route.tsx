@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       throw new Error(result.error || "Failed to analyze repository")
     }
 
-    const { owner, repo, pages, components, apiRoutes, totalFiles, isPPR, isTailwind, isTurbo } = result.data
+    const { owner, repo, pages, components, apiRoutes, totalFiles, isPPR, isTailwind, isTurbo, score } = result.data
 
     const stats = [
       {
@@ -48,9 +48,15 @@ export async function GET(request: Request) {
       <div tw="h-full w-full flex flex-col items-center justify-center bg-[#FDF8F7] p-10">
         <div tw="flex flex-col w-full max-w-[900px]">
           {/* Header */}
-          <div tw="flex flex-col mb-10">
-            <h1 tw="text-5xl font-bold m-0 mb-2">{repo}</h1>
-            <p tw="text-2xl text-[#666666] m-0">{owner}</p>
+          <div tw="flex flex-row items-start justify-between w-full">
+            <div tw="flex flex-col mb-10">
+              <h1 tw="text-5xl font-bold m-0 mb-2">{repo}</h1>
+              <p tw="text-2xl text-[#886F59] m-0">{owner}</p>
+            </div>
+            <div tw="flex items-center flex-row">
+              <div tw="flex text-2xl text-[#886F59]">Score</div>
+              <div tw="flex text-5xl font-bold ml-2">{score}</div>
+            </div>
           </div>
 
           {/* Tags */}
