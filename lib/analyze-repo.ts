@@ -20,8 +20,6 @@ const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN })
 export const analyzeRepo = cache(
   unstable_cache(
     async (url: string): Promise<{ error?: string; data?: RepoStats }> => {
-      // "use cache"
-      // unstable_cacheLife("hours")
       try {
         // Extract owner and repo from GitHub URL
         const match = url.match(/github\.com\/([^/]+)\/([^/]+)/)
@@ -31,12 +29,7 @@ export const analyzeRepo = cache(
         // Get repository contents recursively
         const repoInfo = await octokit.rest.repos.get({ owner, repo })
 
-        const response = await octokit.rest.git.getTree({
-          owner,
-          repo,
-          tree_sha: repoInfo.data.default_branch,
-          recursive: "1",
-        })
+        const response = await octokit.rest.git.getTree({ owner, repo, tree_sha: repoInfo.data.default_branch, recursive: "1" })
 
         if (response.status !== 200) {
           return { error: "Failed to fetch repository contents" }
@@ -64,6 +57,7 @@ export const analyzeRepo = cache(
         if (!nextConfig.path) {
           return { error: "Invalid next.config.ts file" }
         }
+
         // filter files that are not in the same directory as next.config.ts
         const nextDirectory = nextConfig.path.split("/").slice(0, -1).join("/")
 
@@ -135,15 +129,9 @@ function calculateScore(
   isPPR: boolean,
 ) {
   let score = 0
-  if (isTurbo) {
-    score += 100
-  }
-  if (isTailwind) {
-    score += 100
-  }
-  if (isPPR) {
-    score += 100
-  }
+  if (isTurbo) score += 100
+  if (isTailwind) score += 100
+  if (isPPR) score += 100
   score += pages * 100
   score += components * 20
   score += apiRoutes * 100
