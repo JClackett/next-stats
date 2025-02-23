@@ -7,22 +7,22 @@ import { useParams, useRouter } from "next/navigation"
 import { useFormStatus } from "react-dom"
 
 export function RepoForm() {
-  const params = useParams()
+  const params = useParams<{ repo: string | undefined }>()
   const intialRepo = params.repo
   const router = useRouter()
   return (
     <form
+      key={intialRepo}
+      className="flex gap-2"
       onSubmit={(e) => {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
         const repo = formData.get("repo")
         router.push(`/${encodeURIComponent(repo as string)}`)
       }}
-      className="flex gap-2"
     >
       <Input
         name="repo"
-        key={intialRepo?.toString() || undefined}
         type="url"
         autoComplete="organization"
         autoCorrect="off"

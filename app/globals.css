@@ -51,7 +51,7 @@
   --muted: hsl(220 14.3% 95.9%);
   --muted-foreground: hsl(29, 21%, 44%);
   --accent: hsl(220, 99%, 29%);
-  --accent-foreground: hsla(221, 64%, 91%, 0.966);
+  --accent-foreground: hsl(210 20% 98%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(210 20% 98%);
   --border: hsl(12, 70%, 70%);
@@ -76,11 +76,11 @@
   --popover-foreground: hsl(210 20% 98%);
   --secondary: hsl(215 27.9% 16.9%);
   --secondary-foreground: hsl(210 20% 98%);
-  --shadow-main: 5px 5px 0 -2px hsl(12, 56%, 31%);
-  --shadow-small: 3px 3px 0 -1px hsl(12, 56%, 31%);
+  --shadow-main: 5px 5px 0 -2px hsl(13, 32%, 25%);
+  --shadow-small: 3px 3px 0 -1px hsl(13, 32%, 25%);
   --muted: hsl(30, 78%, 7%);
   --muted-foreground: hsla(10, 80%, 82%, 0.689);
-  --accent: hsl(27, 63%, 8%);
+  --accent: hsl(220, 99%, 29%);
   --accent-foreground: hsl(210 20% 98%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(210 20% 98%);
@@ -133,6 +133,17 @@
 @layer base {
   * {
     @apply border-border outline-ring/50 font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+/*
+  ---break---
+*/
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;

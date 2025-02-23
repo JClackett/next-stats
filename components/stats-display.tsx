@@ -3,6 +3,7 @@ import type { RepoStats } from "@/lib/analyze-repo"
 import { FileCode2, Files, Layout, Network } from "lucide-react"
 import { NumberTicker } from "./number-ticker"
 import { ShareButton } from "./share-button"
+import { Badge } from "./ui/badge"
 
 interface StatsDisplayProps {
   stats: RepoStats
@@ -43,18 +44,26 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
           <ShareButton />
         </div>
       </div>
-      <CardContent className="grid gap-4 md:grid-cols-2">
-        {items.map((item) => (
-          <Card key={item.title} className="shadow-small">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="font-medium text-sm">{item.title}</CardTitle>
-              <item.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <NumberTicker key={stats.repo} className="font-extrabold font-mono text-3xl" value={item.value} />
-            </CardContent>
-          </Card>
-        ))}
+
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex gap-2">
+          {stats.isTurbo && <Badge>Turbopack</Badge>}
+          {stats.isTailwind && <Badge>Tailwind</Badge>}
+          {stats.isPPR && <Badge>PPR</Badge>}
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {items.map((item) => (
+            <Card key={item.title} className="shadow-small">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="font-medium text-sm">{item.title}</CardTitle>
+                <item.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <NumberTicker key={stats.repo} className="font-extrabold font-mono text-3xl" value={item.value} />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </CardContent>
     </Card>
   )
