@@ -1,11 +1,17 @@
-import type { Metadata } from "next"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { RepoForm } from "@/components/repo-form"
 import { StatsDisplay } from "@/components/stats-display"
+// import { StatsDisplay } from "@/components/stats-display"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { analyzeRepo } from "@/lib/analyze-repo"
+import { Metadata } from "next"
+import { Suspense } from "react"
+import { RepoForm } from "./repo-form"
 
-export async function generateMetadata({ searchParams }): Promise<Metadata> {
-  const repoUrl = searchParams.repo
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ repo?: string }>
+}): Promise<Metadata> {
+  const repoUrl = (await searchParams).repo
 
   if (!repoUrl) {
     return {
@@ -31,29 +37,23 @@ export async function generateMetadata({ searchParams }): Promise<Metadata> {
   }
 }
 
-export default async function Home({ searchParams }: { searchParams: { repo?: string } }) {
-  const repoUrl = searchParams.repo
-  const result = repoUrl ? await analyzeRepo(repoUrl) : null
-
+export default function Page({ searchParams }: { searchParams: Promise<{ repo?: string }> }) {
   return (
-    <div className="min-h-screen bg-muted/40 flex flex-col">
-      <header className="border-b bg-background h-14 flex items-center px-4 lg:px-6">
-        <h1 className="text-lg font-semibold">GitHub Next.js Analyzer</h1>
-      </header>
-      <main className="flex-1 container max-w-3xl py-8 px-4">
+    <div className="flex min-h-screen flex-col bg-muted/40">
+      <main className="container mx-auto max-w-3xl flex-12 px-4 py-24">
         <Card>
           <CardHeader>
             <CardTitle>Analyze Next.js Repository</CardTitle>
-            <CardDescription>Enter a GitHub repository URL to analyze its Next.js structure</CardDescription>
+            <CardDescription className="font-mono">
+              Enter a GitHub repository URL to analyze its Next.js structure
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <RepoForm initialUrl={repoUrl} />
+            <RepoForm />
 
-            {result?.error && (
-              <div className="rounded-lg bg-destructive/15 text-destructive px-4 py-2 text-sm">{result.error}</div>
-            )}
-
-            {result?.data && <StatsDisplay stats={result.data} />}
+            <Suspense fallback={<div>Loading...</div>}>
+              <RepoStats searchParams={searchParams} />
+            </Suspense>
           </CardContent>
         </Card>
       </main>
@@ -61,3 +61,16 @@ export default async function Home({ searchParams }: { searchParams: { repo?: st
   )
 }
 
+async function RepoStats({ searchParams }: { searchParams: Promise<{ repo?: string }> }) {
+  const repoUrl = (await searchParams).repo
+  if (!repoUrl) return null
+  const result = await analyzeRepo(repoUrl)
+
+  if (result.error) {
+    return <div className="rounded-lg bg-destructive/15 px-4 py-2 text-destructive text-sm">{result.error}</div>
+  }
+
+  if (!result.data) return null
+
+  return <StatsDisplay stats={result.data} />
+}

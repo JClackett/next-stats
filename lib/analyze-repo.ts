@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest"
+import { cache } from "react"
 
 export interface RepoStats {
   owner: string
@@ -9,13 +10,17 @@ export interface RepoStats {
   totalFiles: number
 }
 
-export async function analyzeRepo(url: string): Promise<{ error?: string; data?: RepoStats }> {
+export const analyzeRepo = cache(async (url: string): Promise<{ error?: string; data?: RepoStats }> => {
+  // "use cache"
+  // unstable_cacheLife("hours")
   try {
     // Extract owner and repo from GitHub URL
     const match = url.match(/github\.com\/([^/]+)\/([^/]+)/)
     if (!match) {
       return { error: "Invalid GitHub URL" }
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 3000))
 
     const [, owner, repo] = match
 
@@ -82,5 +87,4 @@ export async function analyzeRepo(url: string): Promise<{ error?: string; data?:
     }
     return { error: "Failed to analyze repository" }
   }
-}
-
+})
