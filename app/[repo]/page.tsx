@@ -7,21 +7,21 @@ export async function generateMetadata({ params }: { params: Promise<{ repo?: st
 
   if (!repoUrl) {
     return {
-      title: "Next Stats",
-      description: "Analyze Next.js repositories for pages, components, API routes, and more.",
+      title: "Rate My Next",
+      description: "Rate your Next.js repository.",
     }
   }
 
   const decodedRepoUrl = decodeURIComponent(repoUrl)
   const result = await analyzeRepo(decodedRepoUrl)
-  const title = result.data ? `Analysis of ${result.data.owner}/${result.data.repo}` : "Next Stats"
+  const title = result.data ? `Stats for ${result.data.owner}/${result.data.repo}` : "Rate My Next"
 
   return {
     title,
-    description: `View the Next.js structure analysis for ${decodedRepoUrl}`,
+    description: `View the Next.js stats for ${decodedRepoUrl}`,
     openGraph: {
       title,
-      description: `View the Next.js structure analysis for ${decodedRepoUrl}`,
+      description: `View the Next.js stats for ${decodedRepoUrl}`,
       images: [`/og?repo=${repoUrl}`],
     },
     twitter: {
