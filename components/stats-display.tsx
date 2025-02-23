@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { RepoStats } from "@/lib/analyze-repo"
-import { FileCode2, Files, Layout, Network } from "lucide-react"
+import { CheckIcon, FileCode2, Files, Layout, Network } from "lucide-react"
 import { NumberTicker } from "./number-ticker"
 import { ShareButton } from "./share-button"
 import { Badge } from "./ui/badge"
@@ -47,9 +47,21 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
 
       <CardContent className="flex flex-col gap-4">
         <div className="flex gap-2">
-          {stats.isTurbo && <Badge>Turbopack</Badge>}
-          {stats.isTailwind && <Badge>Tailwind</Badge>}
-          {stats.isPPR && <Badge>PPR</Badge>}
+          {stats.isTurbo && (
+            <Badge variant="secondary">
+              <CheckIcon size={12} /> Turbopack
+            </Badge>
+          )}
+          {stats.isTailwind && (
+            <Badge variant="secondary">
+              <CheckIcon size={12} /> Tailwind
+            </Badge>
+          )}
+          {stats.isPPR && (
+            <Badge variant="secondary">
+              <CheckIcon size={12} /> PPR
+            </Badge>
+          )}
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {items.map((item) => (

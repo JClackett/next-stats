@@ -55,9 +55,9 @@ export async function GET(request: Request) {
 
           {/* Tags */}
           <div tw="flex gap-2 pl-2">
-            {isTurbo && <div tw="flex mr-2 bg-[#E76E50] text-white px-2 py-1">Turbopack</div>}
-            {isTailwind && <div tw="flex mr-2 bg-[#E76E50] text-white px-2 py-1">Tailwind</div>}
-            {isPPR && <div tw="flex mr-2 bg-[#E76E50] text-white px-2 py-1">PPR</div>}
+            {isTurbo && <div tw="flex mr-2 bg-[#023293] text-white px-2 py-1">Turbopack</div>}
+            {isTailwind && <div tw="flex mr-2 bg-[#023293] text-white px-2 py-1">Tailwind</div>}
+            {isPPR && <div tw="flex mr-2 bg-[#023293] text-white px-2 py-1">PPR</div>}
           </div>
 
           {/* Grid */}
