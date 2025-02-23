@@ -15,13 +15,13 @@ export async function generateMetadata({
 
   if (!repoUrl) {
     return {
-      title: "GitHub Next.js Analyzer",
+      title: "Next Stats",
       description: "Analyze Next.js repositories for pages, components, API routes, and more.",
     }
   }
 
   const result = await analyzeRepo(repoUrl)
-  const title = result.data ? `Analysis of ${result.data.owner}/${result.data.repo}` : "GitHub Next.js Analyzer"
+  const title = result.data ? `Analysis of ${result.data.owner}/${result.data.repo}` : "Next Stats"
 
   return {
     title,
@@ -44,9 +44,7 @@ export default function Page({ searchParams }: { searchParams: Promise<{ repo?: 
         <Card>
           <CardHeader>
             <CardTitle>Analyze Next.js Repository</CardTitle>
-            <CardDescription className="font-mono">
-              Enter a GitHub repository URL to analyze its Next.js structure
-            </CardDescription>
+            <CardDescription className="font-mono">Enter a GitHub repository URL to analyze its Next.js stats</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <RepoForm />

@@ -7,7 +7,7 @@ const sansFont = Geist({ variable: "--font-sans", subsets: ["latin"] })
 const monoFont = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Next.js Stats",
+  title: "Next Stats",
   description: "Analyze Next.js repositories for pages, components, API routes, and more.",
 }
 
