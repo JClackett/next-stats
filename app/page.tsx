@@ -1,8 +1,11 @@
 import { StatsDisplay } from "@/components/stats-display"
+import { Button } from "@/components/ui/button"
 // import { StatsDisplay } from "@/components/stats-display"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { analyzeRepo } from "@/lib/analyze-repo"
 import { Metadata } from "next"
+import Form from "next/form"
 import { Suspense } from "react"
 import { RepoForm } from "./repo-form"
 
@@ -47,7 +50,26 @@ export default function Page({ searchParams }: { searchParams: Promise<{ repo?: 
             <CardDescription className="font-mono">Enter a GitHub repository URL to analyze its Next.js stats</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <RepoForm />
+            <Suspense
+              fallback={
+                <Form action="/" className="flex gap-2">
+                  <Input
+                    name="repo"
+                    type="url"
+                    autoComplete="organization"
+                    autoCorrect="off"
+                    placeholder="https://github.com/username/repo"
+                    defaultValue=""
+                    required
+                    pattern="https://github\.com/[\w-]+/[\w\.-]+"
+                    className="flex-1"
+                  />
+                  <Button type="submit">Analyze</Button>
+                </Form>
+              }
+            >
+              <RepoForm />
+            </Suspense>
 
             <Suspense fallback={<div>Loading...</div>}>
               <RepoStats searchParams={searchParams} />
