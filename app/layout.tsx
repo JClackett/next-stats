@@ -24,7 +24,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
       <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
-            <main className="container mx-auto max-w-3xl flex-12 space-y-6 px-4 py-24">
+            <main className="container mx-auto max-w-3xl space-y-6 px-4 pt-16">
               <Card>
                 <CardHeader>
                   <CardTitle>Analyze Next.js Repository</CardTitle>
