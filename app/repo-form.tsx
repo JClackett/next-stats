@@ -22,6 +22,7 @@ export function RepoForm() {
     >
       <Input
         name="repo"
+        key={intialRepo?.toString() || undefined}
         type="url"
         autoComplete="organization"
         autoCorrect="off"
