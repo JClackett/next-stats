@@ -4,12 +4,16 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Loader2Icon } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
+import { useMemo } from "react"
 import { useFormStatus } from "react-dom"
-
 export function RepoForm() {
   const params = useParams<{ repo: string | undefined }>()
   const intialRepo = params.repo
   const router = useRouter()
+
+  const decoded = useMemo(() => {
+    return intialRepo ? decodeURIComponent(intialRepo as string) : ""
+  }, [intialRepo])
   return (
     <form
       className="flex gap-2"
@@ -27,7 +31,7 @@ export function RepoForm() {
         autoComplete="organization"
         autoCorrect="off"
         placeholder="https://github.com/username/repo"
-        defaultValue={intialRepo ? decodeURIComponent(intialRepo as string) : ""}
+        defaultValue={decoded || ""}
         required
         pattern="https://github\.com/[\w-]+/[\w\.-]+"
         className="flex-1"
