@@ -4,9 +4,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CardContent } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/sonner"
+import { Analytics } from "@vercel/analytics/next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { RepoForm } from "./repo-form"
-
 const sansFont = Geist({ variable: "--font-sans", subsets: ["latin"] })
 const monoFont = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] })
 
@@ -38,6 +38,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
           </div>
           <Toaster />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
