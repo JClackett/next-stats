@@ -1,4 +1,5 @@
-import { analyzeRepo } from "@/lib/analyze-repo"
+import { RepoData, analyzeRepo, getRepoKey } from "@/lib/analyze-repo"
+import { redis } from "@/lib/upstash"
 import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
@@ -13,14 +14,23 @@ export async function GET(request: Request) {
     }
     const decodedRepoUrl = decodeURIComponent(repoUrl)
 
-    const result = await analyzeRepo(decodedRepoUrl)
+    const key = getRepoKey(decodedRepoUrl)
+    if (!key) return new Response("Invalid repo URL", { status: 400 })
 
-    if (result.error || !result.data) {
-      throw new Error(result.error || "Failed to analyze repository")
+    const cachedResult = await redis.hgetall<RepoData>(key)
+    let data: RepoData
+    if (cachedResult) {
+      data = cachedResult
+    } else {
+      const result = await analyzeRepo(decodedRepoUrl)
+      if (!result.success) {
+        throw new Error(result.error || "Failed to analyze repository")
+      }
+      data = result.data
     }
 
-    const { owner, repo, pages, components, apiRoutes, totalFiles, isPPR, isTailwind, isTurbo, score } = result.data
-
+    const { pages, components, apiRoutes, totalFiles, isPPR, isTailwind, isTurbo, score } = data.stats
+    const { owner, repo } = data.info
     const stats = [
       {
         title: "Pages",

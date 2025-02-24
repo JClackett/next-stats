@@ -1,5 +1,6 @@
 import { StatsDisplay } from "@/components/stats-display"
-import { analyzeRepo } from "@/lib/analyze-repo"
+import { RepoData, analyzeRepo, getRepoKey } from "@/lib/analyze-repo"
+import { redis } from "@/lib/upstash"
 import { Metadata } from "next"
 
 export async function generateMetadata({ params }: { params: Promise<{ repo?: string }> }): Promise<Metadata> {
@@ -14,7 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ repo?: st
 
   const decodedRepoUrl = decodeURIComponent(repoUrl)
   const result = await analyzeRepo(decodedRepoUrl)
-  const title = result.data ? `Stats for ${result.data.owner}/${result.data.repo}` : "Rate My Next"
+
+  const title = result.data ? `Stats for ${result.data.info.owner}/${result.data.info.repo}` : "Rate My Next"
 
   return {
     title,
@@ -34,13 +36,18 @@ export default async function Page({ params }: { params: Promise<{ repo?: string
   const repoUrl = (await params).repo
   if (!repoUrl) return null
 
-  const result = await analyzeRepo(decodeURIComponent(repoUrl))
+  const key = getRepoKey(decodeURIComponent(repoUrl))
+  if (!key) return <div className="rounded-lg bg-destructive px-6 py-4 text-sm text-white shadow-main">Invalid Repo URL</div>
 
-  if (result.error) {
-    return <div className="rounded-lg bg-destructive px-6 py-4 text-sm text-white shadow-main">{result.error}</div>
+  const cachedResult = await redis.hgetall<RepoData>(key)
+  if (cachedResult?.info.updatedAt && cachedResult.info.updatedAt > Date.now() - 1000 * 60 * 60) {
+    return <StatsDisplay data={cachedResult} />
   }
 
-  if (!result.data) return null
+  const result = await analyzeRepo(decodeURIComponent(repoUrl))
 
-  return <StatsDisplay stats={result.data} />
+  if (!result.success) {
+    return <div className="rounded-lg bg-destructive px-6 py-4 text-sm text-white shadow-main">{result.error}</div>
+  }
+  return <StatsDisplay data={result.data} />
 }

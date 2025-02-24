@@ -1,34 +1,35 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { RepoStats } from "@/lib/analyze-repo"
-import { CheckIcon, FileCode2, Files, Layout, Network } from "lucide-react"
+import type { RepoData } from "@/lib/analyze-repo"
+import { CheckIcon, ChevronLeftIcon, FileCode2, Files, Layout, Network } from "lucide-react"
+import Link from "next/link"
 import { NumberTicker } from "./number-ticker"
 import { ShareButton } from "./share-button"
 import { Badge } from "./ui/badge"
 
 interface StatsDisplayProps {
-  stats: RepoStats
+  data: RepoData
 }
 
-export function StatsDisplay({ stats }: StatsDisplayProps) {
+export function StatsDisplay({ data }: StatsDisplayProps) {
   const items = [
     {
       title: "Pages",
-      value: stats.pages,
+      value: data.stats.pages,
       icon: Layout,
     },
     {
       title: "Components",
-      value: stats.components,
+      value: data.stats.components,
       icon: FileCode2,
     },
     {
       title: "API Routes",
-      value: stats.apiRoutes,
+      value: data.stats.apiRoutes,
       icon: Network,
     },
     {
       title: "Total Files",
-      value: stats.totalFiles,
+      value: data.stats.totalFiles,
       icon: Files,
     },
   ]
@@ -37,30 +38,35 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
     <Card>
       <div className="flex items-start justify-between">
         <CardHeader>
-          <CardTitle className="font-bold text-3xl/6">{stats.repo}</CardTitle>
-          <CardDescription>{stats.owner}</CardDescription>
+          <div className="flex flex-row items-center gap-2">
+            <Link href="/">
+              <ChevronLeftIcon size={20} />
+            </Link>
+            <CardTitle className="font-bold text-3xl/6">{data.info.repo}</CardTitle>
+          </div>
+          <CardDescription>{data.info.owner}</CardDescription>
         </CardHeader>
 
         <div className="flex flex-row items-center gap-2 pt-6 pr-6">
           <span className="text-muted-foreground">Score</span>
-          <NumberTicker key={stats.repo} className="font-extrabold font-mono text-3xl" value={stats.score} />
+          <NumberTicker key={data.info.repo} className="font-extrabold font-mono text-3xl" value={data.stats.score} />
         </div>
       </div>
 
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            {stats.isTurbo && (
+            {data.stats.isTurbo && (
               <Badge variant="secondary">
                 <CheckIcon size={12} /> Turbopack
               </Badge>
             )}
-            {stats.isTailwind && (
+            {data.stats.isTailwind && (
               <Badge variant="secondary">
                 <CheckIcon size={12} /> Tailwind
               </Badge>
             )}
-            {stats.isPPR && (
+            {data.stats.isPPR && (
               <Badge variant="secondary">
                 <CheckIcon size={12} /> PPR
               </Badge>
@@ -76,7 +82,7 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
                 <item.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <NumberTicker key={stats.repo} className="font-extrabold font-mono text-3xl" value={item.value} />
+                <NumberTicker key={data.info.repo} className="font-extrabold font-mono text-3xl" value={item.value} />
               </CardContent>
             </Card>
           ))}

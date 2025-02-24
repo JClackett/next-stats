@@ -31,7 +31,7 @@ export function RepoForm() {
         type="url"
         autoComplete="organization"
         autoCorrect="off"
-        placeholder="https://github.com/username/repo or path to next root"
+        placeholder="https://github.com/username/repo or path to Next.js config"
         defaultValue={decoded || ""}
         required
         // pattern="https://github\.com/[\w-]+/[\w\.-]+"

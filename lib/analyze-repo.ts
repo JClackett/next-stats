@@ -1,10 +1,9 @@
 import { Octokit } from "@octokit/rest"
 import { unstable_cache } from "next/cache"
 import { cache } from "react"
+import { redis } from "./upstash"
 
-export interface RepoStats {
-  owner: string
-  repo: string
+export type RepoStats = {
   pages: number
   components: number
   apiRoutes: number
@@ -15,15 +14,51 @@ export interface RepoStats {
   score: number
 }
 
+export type RepoInfo = {
+  url: string
+  owner: string
+  repo: string
+  subPath?: string
+  updatedAt: number
+}
+
+export type RepoData = {
+  stats: RepoStats
+  info: RepoInfo
+}
+
+type RepoError = {
+  error: string
+  success: false
+  data: null
+}
+
+type RepoSuccess = {
+  error: null
+  success: true
+  data: RepoData
+}
+
+export type RepoResult = RepoError | RepoSuccess
+
+const nextConfigOptions = ["next.config.ts", "next.config.mts", "next.config.mjs", "next.config.js"]
+
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN })
+
+export function getRepoKey(url: string) {
+  const match = url.match(/github\.com\/([^/]+)\/([^/]+)(?:\/tree\/[^/]+)?(?:\/(.+))?/)
+  if (!match) return null
+  const [, owner, repo, subPath] = match
+  return `repo:${owner}:${repo}${subPath ? `:${subPath}` : ""}`.replace(/\//g, "-").toLowerCase()
+}
 
 export const analyzeRepo = cache(
   unstable_cache(
-    async (url: string): Promise<{ error?: string; data?: RepoStats }> => {
+    async (url: string): Promise<RepoResult> => {
       try {
         // Extract owner, repo and optional path from GitHub URL
         const match = url.match(/github\.com\/([^/]+)\/([^/]+)(?:\/tree\/[^/]+)?(?:\/(.+))?/)
-        if (!match) return { error: "Invalid GitHub URL" }
+        if (!match) return { error: "Invalid GitHub URL", success: false, data: null }
         const [, owner, repo, subPath] = match
 
         // Get repository contents recursively
@@ -32,35 +67,38 @@ export const analyzeRepo = cache(
         const response = await octokit.rest.git.getTree({ owner, repo, tree_sha: repoInfo.data.default_branch, recursive: "1" })
 
         if (response.status !== 200) {
-          return { error: "Failed to fetch repository contents" }
+          return { error: "Failed to fetch repository contents", success: false, data: null }
         }
 
         const files = response.data.tree
 
         // If subPath provided, only look for next.config in that directory
-        const nextConfigs = files.filter((file) => {
-          const isNextConfig =
-            file.path?.endsWith("/next.config.js") ||
-            file.path?.endsWith("/next.config.ts") ||
-            file.path?.endsWith("/next.config.mjs") ||
-            file.path?.endsWith("/next.config.mts")
+        const nextConfigs = files
+          .filter((f) => (subPath ? f.path?.startsWith(subPath) : true))
+          .filter((file) => {
+            if (!file.path) return false
 
-          if (!isNextConfig) return false
-          if (!subPath) return true
-          return file.path?.startsWith(subPath)
-        })
+            // if file path is exactly one of the nextConfigOptions, return true
+            if (nextConfigOptions.includes(file.path)) return true
+            // if it ends with "/" + nextConfigOptions, return true
+            return nextConfigOptions.some((config) => file.path!.endsWith(`/${config}`))
+          })
 
         if (nextConfigs.length === 0) {
-          return { error: "Not a Next.js repository" }
+          return { error: "Not a Next.js repository", success: false, data: null }
         }
         if (nextConfigs.length > 1) {
-          return { error: "Multiple next.config.ts files found, paste the path to the root of a Next.js app" }
+          return {
+            error: "Multiple next.config.ts files found, paste the path to the root of a Next.js app",
+            success: false,
+            data: null,
+          }
         }
 
         const nextConfig = nextConfigs[0]
 
         if (!nextConfig.path) {
-          return { error: "Invalid next.config.ts file" }
+          return { error: "Invalid next.config.ts file", success: false, data: null }
         }
 
         // filter files that are not in the same directory as next.config.ts
@@ -107,16 +145,23 @@ export const analyzeRepo = cache(
         }
 
         const score = calculateScore(pages, components, apiRoutes, totalFiles, isTurbo, isTailwind, isPPR)
-        return { data: { owner, repo, pages, components, apiRoutes, totalFiles, isTurbo, isTailwind, isPPR, score } }
+        const stats = { owner, repo, subPath, pages, components, apiRoutes, totalFiles, isTurbo, isTailwind, isPPR, score }
+
+        const key = getRepoKey(url)!
+
+        const data = { stats, info: { url, owner, repo, subPath, updatedAt: Date.now() } }
+
+        await redis.zadd("leaderboard", { member: key, score: data.stats.score })
+        await redis.hset(key, data)
+
+        return { data, error: null, success: true }
       } catch (error: any) {
         console.log(error)
-        if (error.status === 404) {
-          return { error: "Repository not found" }
-        }
-        if (error.status === 403) {
-          return { error: "Rate limit exceeded or repository is private" }
-        }
-        return { error: "Failed to analyze repository" }
+        let message = "Failed to analyze repository"
+        if (error.status === 404) message = "Repository not found"
+        if (error.status === 403) message = "Rate limit exceeded or repository is private"
+
+        return { error: message, success: false, data: null }
       }
     },
     ["repo"],
