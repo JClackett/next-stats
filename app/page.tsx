@@ -5,10 +5,10 @@ import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Rate My Next",
-  description: "Rate your Next.js repository.",
+  description: "Rate your Next.js repository and compare it to others based on very meaningful metrics.",
   openGraph: {
     title: "Rate My Next App",
-    description: "Rate your Next.js repository.",
+    description: "Rate your Next.js repository and compare it to others based on very meaningful metrics.",
     images: ["https://rate-my-next.vercel.app/cover.png"],
   },
   twitter: {

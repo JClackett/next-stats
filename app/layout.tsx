@@ -16,7 +16,7 @@ export const runtime = "edge"
 
 export const metadata: Metadata = {
   title: "Rate My Next App",
-  description: "Rate your Next.js repository.",
+  description: "Rate your Next.js repository and compare it to others based on very meaningful metrics.",
 }
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -33,7 +33,8 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                       <CardTitle>Rate My Next</CardTitle>
                     </Link>
                     <CardDescription className="font-mono">
-                      Enter a GitHub repository URL to rate your Next.js repository
+                      Enter a GitHub repository URL to rate your Next.js repository and compare it to others based on very
+                      meaningful metrics.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
