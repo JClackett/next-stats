@@ -20,10 +20,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rate My Next App",
     description: "Rate your Next.js repository.",
-    images: ["/og"],
+    images: ["https://rate-my-next.vercel.app/cover.png"],
   },
   twitter: {
     card: "summary_large_image",
+    images: ["https://rate-my-next.vercel.app/cover.png"],
   },
 }
 

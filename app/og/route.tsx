@@ -4,16 +4,15 @@ import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
 
-const standardResponse = new ImageResponse(
-  <div tw="h-full w-full flex items-center justify-center bg-[#FDF8F7] p-10">
-    <div tw="flex flex-col items-center justify-center p-32 border bg-white border-[#E8927C]">
-      <h1 tw="text-7xl font-bold text-center">Rate My Next App</h1>
-    </div>
-  </div>,
-  { width: 1200, height: 630 },
-)
-
 export async function GET(request: Request) {
+  const standardResponse = new ImageResponse(
+    <div tw="h-full w-full flex items-center justify-center bg-white p-10">
+      <div tw="flex flex-col items-center justify-center bg-[#FDF8F7] p-32 border border-[#E8927C]">
+        <h1 tw="text-7xl font-bold text-center">Rate My Next App</h1>
+      </div>
+    </div>,
+    { width: 1200, height: 630 },
+  )
   try {
     const { searchParams } = new URL(request.url)
     const repoUrl = searchParams.get("repo")
