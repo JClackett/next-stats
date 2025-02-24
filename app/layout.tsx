@@ -15,8 +15,16 @@ const monoFont = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] })
 export const runtime = "edge"
 
 export const metadata: Metadata = {
-  title: "Rate My Next",
+  title: "Rate My Next App",
   description: "Rate your Next.js repository.",
+  openGraph: {
+    title: "Rate My Next App",
+    description: "Rate your Next.js repository.",
+    images: ["/og"],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 }
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -25,7 +33,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
       <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
-            <main className="container mx-auto max-w-3xl space-y-6 px-4 pt-4 md:pt-16">
+            <main className="container sticky top-4 mx-auto max-w-3xl space-y-6 px-4 pt-4 md:pt-16">
               <Card>
                 <CardHeader>
                   <Link href="/">

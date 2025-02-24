@@ -4,18 +4,25 @@ import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
 
+const standardResponse = new ImageResponse(
+  <div tw="h-full w-full flex items-center justify-center bg-[#FDF8F7] p-10">
+    <div tw="flex flex-col items-center justify-center p-32 border bg-white border-[#E8927C]">
+      <h1 tw="text-7xl font-bold text-center">Rate My Next App</h1>
+    </div>
+  </div>,
+  { width: 1200, height: 630 },
+)
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const repoUrl = searchParams.get("repo")
 
-    if (!repoUrl) {
-      return new Response("Missing repo parameter", { status: 400 })
-    }
+    if (!repoUrl) return standardResponse
     const decodedRepoUrl = decodeURIComponent(repoUrl)
 
     const key = getRepoKey(decodedRepoUrl)
-    if (!key) return new Response("Invalid repo URL", { status: 400 })
+    if (!key) return standardResponse
 
     const cachedResult = await redis.hgetall<RepoData>(key)
     let data: RepoData
@@ -23,9 +30,7 @@ export async function GET(request: Request) {
       data = cachedResult
     } else {
       const result = await analyzeRepo(decodedRepoUrl)
-      if (!result.success) {
-        throw new Error(result.error || "Failed to analyze repository")
-      }
+      if (!result.success) return standardResponse
       data = result.data
     }
 
