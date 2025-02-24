@@ -181,12 +181,12 @@ function calculateScore(
   isPPR: boolean,
 ) {
   let score = 0
-  if (isTurbo) score += 100
-  if (isTailwind) score += 100
-  if (isPPR) score += 100
+  if (isTurbo) score += 500
+  if (isTailwind) score += 500
+  if (isPPR) score += 500
   score += pages * 100
-  score += components * 20
   score += apiRoutes * 100
+  score += components
   score += totalFiles
 
   return score
