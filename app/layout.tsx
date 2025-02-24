@@ -17,15 +17,6 @@ export const runtime = "edge"
 export const metadata: Metadata = {
   title: "Rate My Next App",
   description: "Rate your Next.js repository.",
-  openGraph: {
-    title: "Rate My Next App",
-    description: "Rate your Next.js repository.",
-    images: ["https://rate-my-next.vercel.app/cover.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["https://rate-my-next.vercel.app/cover.png"],
-  },
 }
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -34,7 +25,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
       <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
-            <main className="container mx-auto max-w-3xl space-y-6 px-4 pt-4 pb-20 md:pt-16">
+            <main className="container mx-auto max-w-3xl space-y-6 px-4 pt-4 pb-12 md:pt-8">
               <div className="sticky top-4">
                 <Card>
                   <CardHeader>

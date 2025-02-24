@@ -1,6 +1,21 @@
 import type { RepoData } from "@/lib/analyze-repo"
 import { redis } from "@/lib/upstash"
+import { Metadata } from "next"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Rate My Next",
+  description: "Rate your Next.js repository.",
+  openGraph: {
+    title: "Rate My Next App",
+    description: "Rate your Next.js repository.",
+    images: ["https://rate-my-next.vercel.app/cover.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://rate-my-next.vercel.app/cover.png"],
+  },
+}
 
 export default async function Page() {
   const leaderboard = await getLeaderboard()
