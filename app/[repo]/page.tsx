@@ -31,6 +31,10 @@ export async function generateMetadata({ params }: { params: Promise<{ repo?: st
     const cachedResult = await redis.hgetall<RepoData>(key)
     if (cachedResult?.info.updatedAt && cachedResult.info.updatedAt > Date.now() - 1000 * 60 * 60) {
       result = cachedResult
+    } else {
+      const res = await analyzeRepo(decodedRepoUrl)
+      if (!res.success) return standardMetadata
+      result = res.data
     }
   } else {
     const res = await analyzeRepo(decodedRepoUrl)
