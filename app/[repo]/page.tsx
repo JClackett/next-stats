@@ -33,10 +33,11 @@ export async function generateMetadata({ params }: { params: Promise<{ repo?: st
     openGraph: {
       title,
       description: `View the Next.js stats for ${decodedRepoUrl}`,
-      images: [`/og?repo=${repoUrl}`],
+      images: [`https://rate-my-next.vercel.app/og?repo=${repoUrl}`],
     },
     twitter: {
       card: "summary_large_image",
+      images: [`https://rate-my-next.vercel.app/og?repo=${repoUrl}`],
     },
   }
 }
