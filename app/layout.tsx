@@ -34,20 +34,22 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
       <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
-            <main className="container sticky top-4 mx-auto max-w-3xl space-y-6 px-4 pt-4 md:pt-16">
-              <Card>
-                <CardHeader>
-                  <Link href="/">
-                    <CardTitle>Rate My Next</CardTitle>
-                  </Link>
-                  <CardDescription className="font-mono">
-                    Enter a GitHub repository URL to rate your Next.js repository
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <RepoForm />
-                </CardContent>
-              </Card>
+            <main className="container mx-auto max-w-3xl space-y-6 px-4 pt-4 pb-20 md:pt-16">
+              <div className="sticky top-4">
+                <Card>
+                  <CardHeader>
+                    <Link href="/">
+                      <CardTitle>Rate My Next</CardTitle>
+                    </Link>
+                    <CardDescription className="font-mono">
+                      Enter a GitHub repository URL to rate your Next.js repository
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <RepoForm />
+                  </CardContent>
+                </Card>
+              </div>
               {children}
             </main>
           </div>
