@@ -120,12 +120,14 @@ export const analyzeRepo = cache(
 
             if (file.type === "blob") {
               totalFiles++
-              if (file.path.match(/app\/(.+\/)?page.tsx$/)) {
+              if (file.path.match(/(.+\/)?page.tsx$/)) {
                 pages++
-              } else if (file.path.match(/.*\.(tsx)$/)) {
-                components++
+              } else if (file.path.match(/(?:src\/)?pages\/.*\.tsx$/)) {
+                pages++
               } else if (file.path.match(/.*route\.(ts|tsx)$/)) {
                 apiRoutes++
+              } else if (file.path.match(/.*\.(tsx)$/)) {
+                components++
               }
             }
           })
